@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>课堂随机点名</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    background:linear-gradient(135deg,#0f172a,#1e3a8a);
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-family:"Microsoft YaHei";
+    color:white;
+}
+
+.container{
+    text-align:center;
+}
+
+h1{
+    font-size:55px;
+    margin-bottom:40px;
+}
+
+#name{
+    width:900px;
+    height:150px;
+    line-height:150px;
+    font-size:90px;
+    font-weight:bold;
+    border-radius:20px;
+    background:rgba(255,255,255,.08);
+    box-shadow:0 0 40px rgba(0,255,255,.35);
+    margin:auto;
+    transition:.2s;
+}
+
+.flash{
+    transform:scale(1.08);
+    color:#00ffff;
+    text-shadow:
+    0 0 10px cyan,
+    0 0 25px cyan,
+    0 0 50px cyan;
+}
+
+button{
+    margin-top:50px;
+    font-size:30px;
+    padding:18px 40px;
+    border:none;
+    border-radius:15px;
+    cursor:pointer;
+    margin-left:15px;
+    margin-right:15px;
+}
+
+#start{
+    background:#16a34a;
+    color:white;
+}
+
+#stop{
+    background:#ef4444;
+    color:white;
+}
+
+button:hover{
+    transform:scale(1.05);
+}
+
+.tip{
+    margin-top:30px;
+    color:#ccc;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>🎲 课堂随机点名</h1>
+
+<div id="name">点击开始</div>
+
+<button id="start">开始</button>
+<button id="stop">停止</button>
+
+<div class="tip">
+开始后高速滚动，停止时自动减速
+</div>
+
+</div>
+
+<script>
+
+const names=[
+"马孟想","李传昊","杜欣彤","王欣玥","樊有若",
+"田宇冉","生梓舒","王腾驹","孔德航","吕正康",
+"高梓宸","刘梦哲","谢思炜","刘宇轩","庞茂森",
+"赵横锐","赵厚宇","赵婉橙","李明哲","贾润泽",
+"蒋宇航","张轩睿","董梓辰","张纹宁","程文淇",
+"王昶睿","姜可心","靳晓冉"
+];
+
+const nameBox=document.getElementById("name");
+
+let rolling=false;
+let speed=40;
+let timer=null;
+
+function randomName(){
+    return names[Math.floor(Math.random()*names.length)];
+}
+
+function run(speed){
+    clearInterval(timer);
+
+    timer=setInterval(()=>{
+
+        nameBox.innerHTML=randomName();
+
+        nameBox.classList.remove("flash");
+        void nameBox.offsetWidth;
+        nameBox.classList.add("flash");
+
+    },speed);
+}
+
+document.getElementById("start").onclick=function(){
+
+    if(rolling) return;
+
+    rolling=true;
+
+    speed=40;
+
+    run(speed);
+
+}
+
+document.getElementById("stop").onclick=function(){
+
+    if(!rolling) return;
+
+    let delay=40;
+
+    function slow(){
+
+        if(delay>420){
+
+            clearInterval(timer);
+
+            nameBox.innerHTML="🎉 "+randomName();
+
+            nameBox.classList.add("flash");
+
+            rolling=false;
+
+            return;
+        }
+
+        run(delay);
+
+        delay+=25;
+
+        setTimeout(slow,220);
+
+    }
+
+    slow();
+
+}
+
+</script>
+
+</body>
+</html>
